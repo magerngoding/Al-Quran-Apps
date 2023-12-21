@@ -1,5 +1,6 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last
 
+import 'package:alquran/app/constants/color.dart';
 import 'package:alquran/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
@@ -33,16 +34,20 @@ class IntroductionView extends GetView<IntroductionController> {
                 'Sesibuk itukah kamu sampai belum membaca alquran?',
                 style: TextStyle(
                   fontSize: 16.0,
+                  color: Colors.grey,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: 10.0),
-            Container(
-              width: 300,
-              height: 300,
-              child: Lottie.asset(
-                'assets/lotties/animasi-quran.json',
+            SizedBox(height: 40.0),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                width: 300,
+                height: 300,
+                child: Lottie.asset(
+                  'assets/lotties/animasi-quran.json',
+                ),
               ),
             ),
             const SizedBox(
@@ -51,9 +56,19 @@ class IntroductionView extends GetView<IntroductionController> {
             ElevatedButton(
               onPressed: () => Get.offAllNamed(Routes.HOME),
               child: Text(
-                'Get Started',
+                'GET STARTED',
+                style: TextStyle(
+                  color: Get.isDarkMode ? appPurpleDark : appWhite,
+                ),
               ),
-            )
+              style: ElevatedButton.styleFrom(
+                primary: Get.isDarkMode ? appWhite : appPurple,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 60,
+                  vertical: 15,
+                ),
+              ),
+            ),
           ],
         ),
       ),
