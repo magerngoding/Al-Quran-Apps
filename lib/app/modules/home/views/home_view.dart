@@ -29,23 +29,18 @@ class HomeView extends GetView<HomeController> {
       body: DefaultTabController(
         length: 3,
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.only(
+            top: 20.0,
+            right: 20,
+            left: 20,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Assalamualaikum',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-
-              // Last Read
-              Banner(),
+              Banner(), // Last Read
               TabBar(
                 indicatorColor: appPurpleDark,
-                labelColor: appPurpleDark,
+                labelColor: Get.isDarkMode ? appWhite : appPurpleDark,
                 unselectedLabelColor: Colors.grey,
                 tabs: [
                   Tab(
@@ -59,67 +54,123 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ],
               ),
-              Expanded(
-                child: TabBarView(
-                  children: [
-                    FutureBuilder<List<Surah>>(
-                        future: controller.getAllSurah(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                          if (!snapshot.hasData) {
-                            // ! = TIDAK, jadi tidak punya data
-                            Center(
-                              child: Text('Tidak ada data!'),
-                            );
-                          }
-
-                          return ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) {
-                              Surah surah = snapshot.data![index];
-                              return ListTile(
-                                onTap: () {
-                                  Get.toNamed(
-                                    Routes.DETAIL_SURAH,
-                                    arguments: surah,
-                                  );
-                                },
-                                leading: CircleAvatar(
-                                  child: Text('${surah.number}'),
-                                ),
-                                title: Text(
-                                  surah.name?.transliteration.id ?? 'Erorr',
-                                ),
-                                subtitle: Text(
-                                    '${surah.numberOfVerses} Ayat | ${surah.revelation?.id ?? 'Erorr...'}'),
-                                trailing: Text(
-                                  '${surah.name?.short ?? "Erorr"}',
-                                ),
-                              );
-                            },
-                          );
-                        }),
-                    Center(
-                      child: Text(
-                        'Page 2',
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        'Page 3',
-                      ),
-                    ),
-                  ],
-                ),
-              )
+              surah()
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Expanded surah() {
+    return Expanded(
+      child: TabBarView(
+        children: [
+          FutureBuilder<List<Surah>>(
+              future: controller.getAllSurah(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (!snapshot.hasData) {
+                  // ! = TIDAK, jadi tidak punya data
+                  Center(
+                    child: Text('Tidak ada data!'),
+                  );
+                }
+
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    Surah surah = snapshot.data![index];
+                    return ListTile(
+                      onTap: () {
+                        Get.toNamed(
+                          Routes.DETAIL_SURAH,
+                          arguments: surah,
+                        );
+                      },
+                      leading: Container(
+                        width: 35,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              Get.isDarkMode
+                                  ? 'assets/images/list_dark.png'
+                                  : 'assets/images/list_light.png',
+                            ),
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${surah.number}',
+                            style: TextStyle(
+                              color: Get.isDarkMode ? appWhite : appPurpleDark,
+                            ),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        surah.name?.transliteration.id ?? 'Erorr',
+                        style: TextStyle(
+                          color: Get.isDarkMode ? appWhite : appPurpleDark,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${surah.numberOfVerses} Ayat | ${surah.revelation?.id ?? 'Erorr...'}',
+                      ),
+                      trailing: Text(
+                        '${surah.name?.short ?? "Erorr"}',
+                        style: TextStyle(
+                          color: Get.isDarkMode ? appWhite : appPurpleDark,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }),
+          ListView.builder(
+            itemCount: 30,
+            itemBuilder: (context, index) {
+              return ListTile(
+                onTap: () {},
+                leading: Container(
+                  width: 35,
+                  height: 35,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(
+                        'images/list.png',
+                      ),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      '${index + 1}',
+                      style: TextStyle(
+                        color: appPurpleDark,
+                      ),
+                    ),
+                  ),
+                ),
+                title: Text(
+                  'Juz ${index + 1}',
+                  style: TextStyle(
+                    color: appPurpleDark,
+                  ),
+                ),
+              );
+            },
+          ),
+          Center(
+            child: Text(
+              'Page 3',
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -156,8 +207,8 @@ class HomeView extends GetView<HomeController> {
                   bottom: 5,
                   right: 5,
                   top: 5,
-                  child: Image.network(
-                    "https://png.pngtree.com/png-clipart/20220424/original/pngtree-download-beautiful-purple-and-gold-mushaf-al-quran-kareem-time-muslim-png-image_7552361.png",
+                  child: Image.asset(
+                    "assets/images/banner.png",
                     width: 150.0,
                     height: 150.0,
                     fit: BoxFit.cover,

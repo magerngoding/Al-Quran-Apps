@@ -12,9 +12,11 @@ const appOrange = Color(0xFFE6704A);
 
 // TEMA
 ThemeData themeLight = ThemeData(
+  brightness: Brightness.light,
   primaryColor: Colors.white,
   scaffoldBackgroundColor: Colors.white,
   appBarTheme: AppBarTheme(
+    elevation: 4,
     backgroundColor: appPurple,
   ),
   textTheme: TextTheme(
@@ -28,9 +30,11 @@ ThemeData themeLight = ThemeData(
 );
 
 ThemeData themeDark = ThemeData(
+  brightness: Brightness.dark,
   primaryColor: appPurpleLight2,
   scaffoldBackgroundColor: appPurpleDark,
   appBarTheme: AppBarTheme(
+    elevation: 0,
     backgroundColor: appPurpleDark,
   ),
   textTheme: TextTheme(
