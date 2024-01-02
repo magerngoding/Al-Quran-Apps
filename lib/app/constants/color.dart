@@ -12,6 +12,9 @@ const appOrange = Color(0xFFE6704A);
 
 // TEMA
 ThemeData themeLight = ThemeData(
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: appPurpleDark,
+  ),
   brightness: Brightness.light,
   primaryColor: Colors.white,
   scaffoldBackgroundColor: Colors.white,
@@ -27,9 +30,26 @@ ThemeData themeLight = ThemeData(
       color: appPurpleDark,
     ),
   ),
+  listTileTheme: ListTileThemeData(
+    textColor: appPurpleDark,
+  ),
+  tabBarTheme: TabBarTheme(
+    labelColor: appPurpleDark,
+    unselectedLabelColor: Colors.grey,
+    indicator: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: appPurpleDark,
+        ),
+      ),
+    ),
+  ),
 );
 
 ThemeData themeDark = ThemeData(
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: appWhite,
+  ),
   brightness: Brightness.dark,
   primaryColor: appPurpleLight2,
   scaffoldBackgroundColor: appPurpleDark,
@@ -43,6 +63,20 @@ ThemeData themeDark = ThemeData(
     ),
     bodyText2: TextStyle(
       color: appWhite,
+    ),
+  ),
+  listTileTheme: ListTileThemeData(
+    textColor: appWhite,
+  ),
+  tabBarTheme: TabBarTheme(
+    labelColor: appWhite,
+    unselectedLabelColor: Colors.grey,
+    indicator: BoxDecoration(
+      border: Border(
+        bottom: BorderSide(
+          color: appWhite,
+        ),
+      ),
     ),
   ),
 );
