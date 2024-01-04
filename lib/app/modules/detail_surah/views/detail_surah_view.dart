@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:alquran/app/constants/color.dart';
 import 'package:alquran/app/data/models/detail_surah.dart' as detail;
 import 'package:alquran/app/data/models/surah.dart';
 import 'package:flutter/material.dart';
@@ -22,41 +23,116 @@ class DetailSurahView extends GetView<DetailSurahController> {
         centerTitle: true,
       ),
       body: ListView(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(20),
         children: [
-          Card(
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Column(
-                children: [
-                  Text(
-                    'SURAH ${surah.name?.transliteration.id.toUpperCase() ?? 'Erorr...'}',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+          GestureDetector(
+            onTap: () => Get.dialog(
+              Dialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadiusDirectional.circular(20),
+                ),
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                  Text(
-                    'SURAH ${surah.name?.translation.id.toUpperCase() ?? 'Erorr...'}',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  padding: const EdgeInsets.all(25),
+                  color: Get.isDarkMode
+                      ? appPurpleLight2.withOpacity(0.3)
+                      : appWhite,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${surah.name.translation.id}',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        '${surah.tafsir?.id ?? 'Tidak ada tafsir pada surah ini.'}',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                  Text(
-                    'SURAH ${surah.numberOfVerses ?? 'Erorr...'} Ayat | ${surah.revelation?.id}',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(
+          )
+          // GestureDetector(
+          //   onTap: () => Get.defaultDialog(
+          //     contentPadding: EdgeInsets.symmetric(
+          //       horizontal: 20,
+          //       vertical: 10,
+          //     ),
+          //     title: 'Tafsitr ${surah.name?.transliteration.id}',
+          //     titleStyle: TextStyle(
+          //       fontWeight: FontWeight.bold,
+          //     ),
+          //     content: Container(
+          //       child: Text(
+          //         '${surah.tafsir?.id ?? 'Tidak ada tafsir pada surah ini.'}',
+          //         textAlign: TextAlign.left,
+          //       ),
+          //     ),
+          //   ),
+          //   child: Container(
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(20),
+          //       gradient: LinearGradient(
+          //         begin: Alignment.topRight,
+          //         end: Alignment.bottomLeft,
+          //         colors: [
+          //           appPurpleLight1,
+          //           appPurpleDark,
+          //         ],
+          //       ),
+          //     ),
+          //     child: Card(
+          //       child: Padding(
+          //         padding: EdgeInsets.all(20),
+          //         child: Column(
+          //           children: [
+          //             Text(
+          //               '${surah.name?.transliteration.id.toUpperCase() ?? 'Erorr...'}',
+          //               style: TextStyle(
+          //                 fontSize: 20.0,
+          //                 fontWeight: FontWeight.bold,
+          //                 color: appWhite,
+          //               ),
+          //             ),
+          //             Text(
+          //               '( ${surah.name?.translation.id.toUpperCase() ?? 'Erorr...'} )',
+          //               style: TextStyle(
+          //                 fontSize: 16.0,
+          //                 fontWeight: FontWeight.bold,
+          //                 color: appWhite,
+          //               ),
+          //             ),
+          //             const SizedBox(
+          //               height: 10.0,
+          //             ),
+          //             Text(
+          //               'SURAH ${surah.numberOfVerses ?? 'Erorr...'} Ayat | ${surah.revelation?.id}',
+          //               style: TextStyle(
+          //                 fontSize: 16.0,
+          //                 color: appWhite,
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          ,
+          SizedBox(
             height: 20.0,
           ),
           FutureBuilder<detail.DetailSurah>(
@@ -85,7 +161,11 @@ class DetailSurahView extends GetView<DetailSurahController> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Card(
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: appPurpleLight2.withOpacity(0.3),
+                        ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
                             vertical: 5,
@@ -94,8 +174,24 @@ class DetailSurahView extends GetView<DetailSurahController> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CircleAvatar(
-                                child: Text('${index + 1}'),
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                      Get.isDarkMode
+                                          ? 'assets/image/list_dark.png'
+                                          : 'assets/image/list_light.png',
+                                    ),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${index + 1}',
+                                  ),
+                                ),
                               ),
                               Row(
                                 children: [
