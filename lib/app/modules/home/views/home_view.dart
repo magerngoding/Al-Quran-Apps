@@ -1,10 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'package:alquran/app/constants/color.dart';
+import 'package:alquran/app/data/models/juz.dart' as juz;
+
 import 'package:alquran/app/data/models/surah.dart';
 import 'package:alquran/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
@@ -45,7 +46,7 @@ class HomeView extends GetView<HomeController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Banner(), // Last Read
+              Banner(),
               TabBar(
                 tabs: [
                   Tab(
@@ -59,7 +60,155 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ],
               ),
-              surah()
+              Expanded(
+                child: TabBarView(
+                  children: [
+                    //SURAH
+                    FutureBuilder<List<Surah>>(
+                      future: controller.getAllSurah(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (!snapshot.hasData) {
+                          // ! = TIDAK, jadi tidak punya data
+                          Center(
+                            child: Text('Tidak ada data!'),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            Surah surah = snapshot.data![index];
+                            return ListTile(
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.DETAIL_SURAH,
+                                  arguments: surah,
+                                );
+                              },
+                              leading: Obx(
+                                () => Container(
+                                  width: 45,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        controller.isDark.isTrue
+                                            ? 'assets/images/list_dark.png'
+                                            : 'assets/images/list_light.png',
+                                      ),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${surah.number}',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                surah.name?.transliteration.id ?? 'Erorr',
+                              ),
+                              subtitle: Text(
+                                '${surah.numberOfVerses} Ayat | ${surah.revelation?.id ?? 'Erorr...'}',
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                              trailing: Text(
+                                '${surah.name?.short ?? "Erorr"}',
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+
+                    // JUZ
+                    FutureBuilder<List<juz.Juz>>(
+                      future: controller.getAllJuz(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (!snapshot.hasData) {
+                          Center(
+                            child: Text('Tidak ada data!'),
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            juz.Juz detailJuz = snapshot.data![index];
+                            return ListTile(
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.DETAIL_JUZ,
+                                  arguments: detailJuz,
+                                );
+                              },
+                              leading: Obx(
+                                () => Container(
+                                  width: 45,
+                                  height: 45,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        controller.isDark.isTrue
+                                            ? 'assets/images/list_dark.png'
+                                            : 'assets/images/list_light.png',
+                                      ),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      '${index + 1}',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                'Juz ${index + 1}',
+                              ),
+                              isThreeLine: true,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    'Mulai dari ${detailJuz.juz}',
+                                    style: TextStyle(
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                  Text(
+                                    'Sampai ${detailJuz.totalVerses}',
+                                    style: TextStyle(
+                                      color: Colors.grey[500],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    Center(
+                      child: Text(
+                        'Page 3',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
@@ -77,113 +226,6 @@ class HomeView extends GetView<HomeController> {
             color: controller.isDark.isTrue ? appPurpleDark : appWhite,
           ),
         ),
-      ),
-    );
-  }
-
-  Expanded surah() {
-    return Expanded(
-      child: TabBarView(
-        children: [
-          FutureBuilder<List<Surah>>(
-              future: controller.getAllSurah(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (!snapshot.hasData) {
-                  // ! = TIDAK, jadi tidak punya data
-                  Center(
-                    child: Text('Tidak ada data!'),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    Surah surah = snapshot.data![index];
-                    return ListTile(
-                      onTap: () {
-                        Get.toNamed(
-                          Routes.DETAIL_SURAH,
-                          arguments: surah,
-                        );
-                      },
-                      leading: Obx(
-                        () => Container(
-                          width: 45,
-                          height: 45,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                controller.isDark.isTrue
-                                    ? 'assets/images/list_dark.png'
-                                    : 'assets/images/list_light.png',
-                              ),
-                            ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              '${surah.number}',
-                            ),
-                          ),
-                        ),
-                      ),
-                      title: Text(
-                        surah.name?.transliteration.id ?? 'Erorr',
-                      ),
-                      subtitle: Text(
-                        '${surah.numberOfVerses} Ayat | ${surah.revelation?.id ?? 'Erorr...'}',
-                        style: TextStyle(
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                      trailing: Text(
-                        '${surah.name?.short ?? "Erorr"}',
-                      ),
-                    );
-                  },
-                );
-              }),
-          ListView.builder(
-            itemCount: 30,
-            itemBuilder: (context, index) {
-              return ListTile(
-                onTap: () {},
-                leading: Obx(
-                  () => Container(
-                    width: 35,
-                    height: 35,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                          controller.isDark.isTrue
-                              ? 'assets/images/list_dark.png'
-                              : 'assets/images/list_light.png',
-                        ),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${index + 1}',
-                      ),
-                    ),
-                  ),
-                ),
-                title: Text(
-                  'Juz ${index + 1}',
-                ),
-              );
-            },
-          ),
-          Center(
-            child: Text(
-              'Page 3',
-            ),
-          ),
-        ],
       ),
     );
   }

@@ -1,5 +1,5 @@
 // API URL : https://api.quran.gading.dev/surah/114
-// Get detail per surah dalam Al-Qurab
+// Get detail per surah dalam Al-Quran
 
 import 'dart:convert';
 
